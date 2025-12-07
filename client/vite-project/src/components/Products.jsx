@@ -30,7 +30,7 @@ const Products = () => {
                     start: "top 80%",
                     end: "top 20%",
                     scrub: 1,
-                    pin: true, // Uncomment to pin the heading while scrolling
+                    pin: true,
                 }
             }
         );
