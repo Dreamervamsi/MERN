@@ -1,55 +1,84 @@
 import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import video from '../assets/WhatsApp Video 2025-12-08 at 1.16.11 PM.mp4';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
     const heroRef = useRef(null);
     const textRef = useRef(null);
-    const buttonRef = useRef(null);
+    const videoRef = useRef(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        const tl = gsap.timeline();
 
-        tl.fromTo(heroRef.current,
-            { opacity: 0 },
-            { opacity: 1, duration: 1 }
-        )
-            .fromTo(textRef.current.children,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, stagger: 0.2 }
-            )
-            .fromTo(buttonRef.current,
-                { scale: 0, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
-            );
+        tl.fromTo(
+            textRef.current.children,
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out" }
+        );
+
+        gsap.to(videoRef.current, {
+            scrollTrigger: {
+                trigger: heroRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+                pin: false
+            },
+            y: 200,
+            scale: 1.1,
+            ease: "none"
+        });
+
+        gsap.to(textRef.current, {
+            scrollTrigger: {
+                trigger: heroRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            y: -100,
+            ease: "none"
+        });
 
     }, []);
 
     return (
-        <section
-            ref={heroRef}
-            className="relative h-screen flex items-center justify-start text-gray-900 overflow-hidden"
-        >
-            <div className="relative z-10 text-left px-4 max-w-4xl ml-4 md:ml-32">
-                <div ref={textRef}>
-                    <h1 className="text-6xl font-semibold mb-6">
-                        Discover the Future of Shopping
+        <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
+            <video
+                ref={videoRef}
+                src={video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute top-0 left-0 w-full h-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-black/50 z-10"></div>
+
+            <div className="relative z-20 flex items-center h-full text-white">
+                <div className="container mx-auto px-6 md:px-12" ref={textRef}>
+                    <h1 className="text-6xl font-extrabold tracking-tight mb-6 leading-tight text-left">
+                        Smart Logistics for <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-red-300">
+                            A Better Future
+                        </span>
                     </h1>
-                    <br />
-                    <p className="text-lg md:text-xl text-gray-600 mb-8">
-                        Experience premium products with a touch of magic. Curated just for you.
+                    <p className="mb-10 max-w-2xl text-gray-200 text-left text-xl">
+                        Connect with trusted transport owners. AI-powered matching for load type, weight, and value.
                     </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button className="border border-blue-500 hover:bg-blue-500 hover:text-white px-6 py-2 rounded transition duration-300">
+                            Explore Now
+                        </button>
+                    </div>
                 </div>
-                <button
-                    ref={buttonRef}
-                    className="border hover:bg-gray-600 hover:text-white transition duration-500 px-4 py-2.5 focus:outline-none"
-                    onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                    Shop Now
-                </button>
             </div>
-            <div className='relative right-20 '>
-                <img width={400} height={400} src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQORqCE2NNobtGJVl9AQQ_l5eHDVDYuzadRjjeJDQ502wTGPBMn-PYPaM5z5WoVu3MoVLGAHYs8m0qSSyha70nzGp7VnOEEu6Drk9UQMCF6iASn9XCgLF9EgUQ" style={{ transform: "rotate(-20deg)" }} />
-            </div>
+
         </section>
     );
 };
